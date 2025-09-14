@@ -1,73 +1,75 @@
 # goit-node-rest-api
 
-Написати REST API для роботи з колекцією контактів. Для роботи з REST API використовуй [Postman] (https://www.getpostman.com/).
+## HW 3 Postgress
 
-## Крок 1
+### Results:
 
-Cтвори репозиторій з назвою `goit-node-rest-api` і помісти на головну гілку (`main`) файли з папки [src](./src). Завваж: папки `src` в репозиторії бути не повинно, тебе цікавить лише її вміст.
-
-Створи гілку `hw02-express` з гілки `main`.
-
-Встанови модулі командою
+Seed initial contact (optional): 
 
 ```bash
-npm i
+node seed/contacts.js
+
+Database connection successful
+Contacts seeded successfully
 ```
 
-## Крок 2
+#### Step 2 Result:
 
-У файл `contactsServices.js` (знаходиться в папці `services`) скопіюй функції з файла `contacts.js` з домашнього завдання до модуля 1.
+![](./step-02.png)
 
-## Крок 3
+#### Step 3 Result:
 
-Напиши контролери у файлі `contactsControllers.js` (знаходиться у папці `controllers`) з урахуванням наведених нижче вимог.
+Create connection to PosgresSQL with Sequelize:
+```bash
+npm start            
 
-REST API повинен підтримувати такі раути.
+> start
+> node ./app.js
 
-### @ GET /api/contacts
+Database connection successful
+Server is running. Use our API on port: 3000
+```
 
-- Викликає функцію-сервіс `listContacts` для роботи з json-файлом `contacts.json`
-- Повертає масив всіх контактів в json-форматі зі статусом `200`
+Connection error handling:
 
-### @ GET /api/contacts/:id
+```bash
+npm start
 
-- Викликає функцію-сервіс `getContactById` для роботи з json-файлом `contacts.json`
-- Якщо контакт за `id` знайдений, повертає об'єкт контакту в json-форматі зі статусом `200`
-- Якщо контакт за `id` не знайдено, повертає json формату `{"message": "Not found"}` зі статусом `404`
+> start
+> node ./app.js
 
-### @ DELETE /api/contacts/:id
+Database connection error: password authentication failed for user "db_contacts_pbtr_use"
+```
 
-- Викликає функцію-сервіс `removeContact` для роботи з json-файлом `contacts.json`
-- Якщо контакт за `id` знайдений і видалений, повертає об'єкт видаленого контакту в json-форматі зі статусом `200`
-- Якщо контакт за `id` не знайдено, повертає json формату `{"message": "Not found"}` зі статусом `404`
+CRUD-operations with Sequelize:
 
-### @ POST /api/contacts
+```bash
+npm start
 
-- Отримує `body` в json-форматі з полями `{name, email, phone}`. Усі поля є обов'язковими - для валідації створи у файлі `contactsSchemas.js` (знаходиться у папці `schemas`) схему з використаням пакета `joi`
-- Якщо в `body` немає якихось обов'язкових полів (або передані поля мають не валідне значення), повертає json формату `{"message": error.message}` (де `error.message` - змістовне повідомлення з суттю помилки) зі статусом `400`
-- Якщо `body` валідне, викликає функцію-сервіс `addContact` для роботи з json-файлом `contacts.json`, з передачею їй даних з `body`
-- За результатом роботи функції повертає новостворений об'єкт з полями `{id, name, email, phone}` і статусом `201`
+> start
+> node ./app.js
 
-### @ PUT /api/contacts/:id
+Database connection successful
+Server is running. Use our API on port: 3000
+GET /api/contacts 200 2229 - 1457.680 ms
+GET /api/contacts/8057fedf-7afc-4834-90bc-9020c2c0157b 200 224 - 1422.516 ms
+DELETE /api/contacts/8057fedf-7afc-4834-90bc-9020c2c0157b 200 224 - 391.191 ms
+# delete for already deleted (not existed contact)
+DELETE /api/contacts/8057fedf-7afc-4834-90bc-9020c2c0157b 404 23 - 285.806 ms 
+# get for already deleted (not existed contact)
+GET /api/contacts/8057fedf-7afc-4834-90bc-9020c2c0157b 404 23 - 197.998 ms
+POST /api/contacts 201 214 - 1423.955 ms
+# check for validation
+POST /api/contacts 400 38 - 3.433 ms
+POST /api/contacts 201 218 - 1579.806 ms
+GET /api/contacts/6ed2573a-4cc7-42c3-901a-e221ebd302b3 200 218 - 1579.280 ms
+PUT /api/contacts/6ed2573a-4cc7-42c3-901a-e221ebd302b3 200 218 - 382.027 ms
+PATCH /api/contacts/6ed2573a-4cc7-42c3-901a-e221ebd302b3/favorite 200 218 - 396.783 ms
+```
 
-- Отримує `body` в json-форматі з будь-яким набором оновлених полів (`name`, `email`, `phone`) (всі поля вимагати в боді як обов'язкові не потрібно: якщо якесь із полів не передане, воно має зберегтись у контакта зі значенням, яке було до оновлення)
-- Якщо запит на оновлення здійснено без передачі в `body` хоча б одного поля, повертає json формату `{"message": "Body must have at least one field"}` зі статусом `400`.
-- Передані в боді поля мають бути провалідовані - для валідації створи у файлі `contactsSchemas.js` (знаходиться у папці `schemas`) схему з використанням пакета `joi`. Якщо передані поля мають не валідне значення, повертає json формату `{"message": error.message}` (де `error.message` - змістовне повідомлення з суттю помилки) зі статусом `400`
-- Якщо з `body` все добре, викликає функцію-сервіс `updateContact`, яку слід створити в файлі `contactsServices.js` (знаходиться в папці `services`). Ця функція має приймати `id` контакта, що підлягає оновленню, та дані з `body`, і оновити контакт у json-файлі `contacts.json`
-- За результатом роботи функції повертає оновлений об'єкт контакту зі статусом `200`.
-- Якщо контакт за `id` не знайдено, повертає json формату `{"message": "Not found"}` зі статусом `404`
+#### Step 4 Results:
 
-### Зверни увагу
-
-- Валідацію `body` можна як здійснювати у контролері, так і створити для цих цілей окрему міддлвару, яка буде викликатись до контролера. Для створення міддлвари можеш скористатись функцією `validateBody.js`, яку знайдеш у папці `helpers`
-- Для роботи з помилками можна скористатись функцією `HttpError.js`, яку знайдеш у папці `helpers`
-
-Якщо вказані функції використовувати не будеш, видали їх з проєкту перед тим, як надсилатимеш роботу на перевірку ментору
-
-## Критерії прийому
-
-- Створено репозиторій з домашнім завданням
-- Посилання на репозиторій (гілку з домашнім завданням) надіслане ментору на перевірку
-- Код відповідає технічному завданню (мають бути в точності дотримані, зокрема, вимоги стосовно струкутри `body`, контенту та статусу відповідей на запити тощо)
-- У коді немає закоментованих ділянок коду
-- Проєкт коректно працює з актуальною LTS-версією Node
+- The logs from working API endpoint in in previous section log.
+- [Route update](./routes/contactsRouter.js?l=25)
+- [Controller update](./controllers/contactsControllers.js?line=63)
+- [Service update](./services/contactsServices.js?line=32)
