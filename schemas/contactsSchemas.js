@@ -7,8 +7,8 @@ const PHONE_MAX_LENGTH = 20;
 
 export const createContactSchema = Joi.object({
  	name: Joi.string().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH).required(),
-    email: Joi.string().email().required(),
-    phone: Joi.string().min(PHONE_MIN_LENGTH).max(PHONE_MAX_LENGTH).required(),
+  email: Joi.string().email().required(),
+  phone: Joi.string().min(PHONE_MIN_LENGTH).max(PHONE_MAX_LENGTH).required(),
 })
 
 export const updateContactSchema = Joi.object({

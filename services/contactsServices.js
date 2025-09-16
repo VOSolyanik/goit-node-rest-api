@@ -1,7 +1,16 @@
-import Contact from "../db/contacts.js";
+import Contact from '../db/contacts.js';
 
-async function listContacts() {
-  return await Contact.findAll();
+async function listContacts({ limit, offset, favorite } = {}) {
+  const where = {};
+  if (favorite !== undefined) {
+    where.favorite = favorite;
+  }
+
+  return await Contact.findAll({
+    where,
+    limit,
+    offset
+  });
 }
 
 async function getContactById(contactId) {
@@ -29,12 +38,12 @@ async function updateContact(contactId, data) {
   return contact;
 }
 
-export const updateContactStatus = async (contactId, { favorite }) => {
-    const contact = await getContactById(contactId);
-    if (!contact) return null;
+async function updateContactStatus(contactId, { favorite }) {
+  const contact = await getContactById(contactId);
+  if (!contact) return null;
 
-    await contact.update({ favorite });
-    return contact;
+  await contact.update({ favorite });
+  return contact;
 };
 
 export {
@@ -43,4 +52,5 @@ export {
   removeContact,
   addContact,
   updateContact,
+  updateContactStatus
 };
