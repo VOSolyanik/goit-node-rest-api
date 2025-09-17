@@ -65,13 +65,13 @@ async function updateUserAvatar(userId, file) {
   if (file) {
     const newPath = path.join(avatarsDir, file.filename);
     await fs.rename(file.path, newPath);
-    avatarURL = path.join('public', 'avatars', file.filename);
+    avatarURL = path.join('avatars', file.filename);
   }
   const user = await getUserById(userId);
   if (!user) return null;
 
   if (user.avatarURL) {
-    const oldAvatarPath = path.join(process.cwd(), user.avatarURL);
+    const oldAvatarPath = path.join('public', user.avatarURL);
     const fileExists = await fs.stat(oldAvatarPath).then(() => true).catch(() => false);
     if (fileExists) await fs.unlink(oldAvatarPath);
   }
