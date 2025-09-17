@@ -3,8 +3,8 @@ import HttpError from '../helpers/HttpError.js';
 
 export const register = async (req, res, next) => {
   try {
-    const { id, email, subscription } = await authService.registerUser(req.body);
-    res.status(201).json({ id, email, subscription });
+    const { id, email, subscription, avatarURL } = await authService.registerUser(req.body);
+    res.status(201).json({ id, email, subscription, avatarURL });
   } catch (error) {
     next(error);
   }
@@ -30,9 +30,20 @@ export const logout = async (req, res, next) => {
   }
 };
 
-export const getCurrent = async (req, res, next) => {
+export const getCurrentUser = async (req, res, next) => {
   try {
     const user = await authService.getUserById(req.user.id);
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateCurrentUserAvatar = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const file = req.file;
+    const user = await authService.updateUserAvatar(id, file);
     res.status(200).json(user);
   } catch (error) {
     next(error);

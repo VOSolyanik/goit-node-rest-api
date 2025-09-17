@@ -1,10 +1,10 @@
 # goit-node-rest-api
 
-## HW 4 Auth
+## HW 5 Avatars
 
 ### Results:
 
-AUTH-operations:
+AUTH-operations and file upload:
 
 ```bash
 npm start
@@ -14,17 +14,47 @@ npm start
 
 Database connection successful
 Server is running. Use our API on port: 3000
-POST /api/auth/register 409 34 - 1567.140 ms #Attempt to register with existing email
-POST /api/auth/register 201 101 - 269.142 ms
-POST /api/auth/login 400 38 - 2.857 ms #Attempt to login with invalid model
-POST /api/auth/login 401 40 - 1776.772 ms #Attempt to login with invalid credentials
-POST /api/auth/login 200 349 - 466.288 ms
-GET /api/auth/current 401 28 - 0.915 ms #Attempt to get user without token
-GET /api/auth/current 200 101 - 387.813 ms
-POST /api/auth/logout 204 - - 1809.842 ms
-POST /api/auth/logout 401 28 - 191.820 ms #Attempt to logout with token that not already in DB
-GET /api/auth/current 401 28 - 1435.896 ms #Attempt to get user with token that not already in DB
+POST /api/auth/register 201 100 - 280.031 ms
+POST /api/auth/login 200 347 - 1702.359 ms
+PATCH /api/auth/avatar 200 203 - 1803.869 ms
+PATCH /api/auth/avatar 401 28 - 2.227 ms #Unauthorized without token
 
+```
+
+Run unit tests:
+
+```bash
+npm run test
+
+> test
+> cross-env NODE_ENV=test NODE_OPTIONS='--experimental-vm-modules' npx jest
+
+(node:32405) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ PASS  controllers/authController.spec.js
+  AuthController
+    register
+      ✓ should register a user successfully (2 ms)
+      ✓ should handle registration errors (1 ms)
+    login
+      ✓ should login a user successfully (1 ms)
+      ✓ should handle invalid credentials
+      ✓ should handle login service errors (1 ms)
+    logout
+      ✓ should logout a user successfully
+      ✓ should handle logout errors
+    getCurrentUser
+      ✓ should get current user successfully
+      ✓ should handle get current user errors
+    updateCurrentUserAvatar
+      ✓ should update user avatar successfully (1 ms)
+      ✓ should handle update avatar errors
+
+Test Suites: 1 passed, 1 total
+Tests:       11 passed, 11 total
+Snapshots:   0 total
+Time:        0.239 s, estimated 1 s
+Ran all test suites.
 ```
 
 #### References:
@@ -32,4 +62,4 @@ GET /api/auth/current 401 28 - 1435.896 ms #Attempt to get user with token that 
 - [Route](./routes/authRouter.js)
 - [Controller](./controllers/authController.js)
 - [Service](./services/authService.js)
-- [Middleware](./middlewares/authenticate.js)
+- [Middleware](./middlewares/upload.js)

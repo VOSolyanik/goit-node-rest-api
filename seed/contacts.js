@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import fs from 'fs/promises';
 import path from 'path';
-import sequelize from '../db/sequelize.js';
 import Contact from '../db/contacts.js';
 import User from '../db/users.js';
 
